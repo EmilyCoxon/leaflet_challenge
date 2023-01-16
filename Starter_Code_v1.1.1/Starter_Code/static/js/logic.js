@@ -74,6 +74,8 @@ function createFeatures(earthquakeData) {
           weight: 0.3
         })
       }
+
+    
   });
 
 //Earthquakes with higher magnitudes should appear larger, and earthquakes with greater depth should appear darker in colour.
@@ -118,6 +120,36 @@ function onEachFeature(feature, layer){
 
 
 // 2.3 Create a legend that will provide context for your map data.
+
+// 15:2:4 how to legend
+
+
+  // Set up the legend.
+let legend = L.control({ position: "bottomright" });
+legend.onAdd = function() {
+  let div = L.DomUtil.create("div", "info legend");
+  let depth = [-10, 10, 30, 50, 70, 90];
+
+    // Add the minimum and maximum.
+   let legendInfo = "<h1>Depth (km)</h1>" +
+      "<div class=\"labels\">" +
+        "<div class=\"min\">" + depth[0] + "</div>" +
+        "<div class=\"max\">" + depth[depth.length - 1] + "</div>" +
+      "</div>";
+
+   div.innerHTML = legendInfo;
+
+  limits.forEach(function(limit, index) {
+      labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+    });
+
+   div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+    return div;
+  };
+
+  // Adding the legend to the map
+legend.addTo(myMap);
+
 
 
 
