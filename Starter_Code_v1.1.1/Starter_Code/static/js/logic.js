@@ -10,7 +10,7 @@ d3.json(url).then(function(data) {
   createFeatures(data.features);
 
 
-});
+
 
 function createMap(earthquakes) {
 
@@ -41,6 +41,43 @@ function createMap(earthquakes) {
     layers: [street, earthquakes]
   });
 
+  let legend = L.control({
+    position: "bottomright" 
+  });
+  
+    // add all the details for the legend
+  
+  legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+  
+    let depth = [-10, 10, 30, 50, 70, 90];
+    let colors = [
+     "#FFCC99",
+     "#FF99CC", 
+     "#FF8080",      
+     "#993366",
+     "#800080",
+     "#660066"
+  ];
+  
+  
+    // looping through intervals to generate a label with coloured square for each interval
+    for (let i=0; i < depth.length; i++){
+      div.innerHTML += "<i style='background: " + 
+      colors[i] + "'></i>" + 
+      depth[i] + 
+      (depth[i+1] ? "&ndash;" + 
+      depth[i+1] + 
+      "<br>" : "+");
+    }
+     return div;
+  };
+  
+    // add legend to the map
+  
+  legend.addTo(myMap);
+  
+
 
   // Create a layer control.
   // Pass it our baseMaps and overlayMaps.
@@ -48,6 +85,7 @@ function createMap(earthquakes) {
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
+  
 
 }
 
@@ -75,6 +113,8 @@ function createFeatures(earthquakeData) {
         })
       }
 
+  
+
     
   });
 
@@ -83,7 +123,7 @@ function createFeatures(earthquakeData) {
 
 function markerSize(mag) {
   // let mag = (feature.properties.mag);
-  return mag * 5;
+  return mag **2;
 }
 
 // Hint: The depth of the earth can be found as the third coordinate for each earthquake.
@@ -120,35 +160,48 @@ function onEachFeature(feature, layer){
 
 
 // 2.3 Create a legend that will provide context for your map data.
-
+// Set up the legend.
 // 15:2:4 how to legend
 
+let legend = L.control({
+  position: "bottomright" 
+});
 
-  // Set up the legend.
-let legend = L.control({ position: "bottomright" });
+  // add all the details for the legend
+
 legend.onAdd = function() {
   let div = L.DomUtil.create("div", "info legend");
+
   let depth = [-10, 10, 30, 50, 70, 90];
+  let colors = [
+   "#FFCC99",
+   "#FF99CC", 
+   "#FF8080",      
+   "#993366",
+   "#800080",
+   "#660066"
+];
 
-    // Add the minimum and maximum.
-   let legendInfo = "<h1>Depth (km)</h1>" +
-      "<div class=\"labels\">" +
-        "<div class=\"min\">" + depth[0] + "</div>" +
-        "<div class=\"max\">" + depth[depth.length - 1] + "</div>" +
-      "</div>";
 
-   div.innerHTML = legendInfo;
+  // looping through intervals to generate a label with coloured square for each interval
+  for (let i=0; i < depth.length; i++){
+    div.innerHTML += "<i style='background: " + 
+    colors[i] + "'></i>" + 
+    depth[i] + 
+    (depth[i+1] ? "&ndash;" + 
+    depth[i+1] + 
+    "<br>" : "+");
+  }
+   return div;
+};
 
-  limits.forEach(function(limit, index) {
-      labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-    });
 
-   div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-    return div;
-  };
 
-  // Adding the legend to the map
-legend.addTo(myMap);
+
+
+  
+
+});
 
 
 
